@@ -14,7 +14,8 @@
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "test:standalone": "node --test test/test.mjs"
   },
   "keywords": [
     "ai",
