@@ -244,3 +244,69 @@ describe('PromptOptimizer', () => {
     });
   });
 });
+
+// ── Additional Edge Case Tests ──────────────────────────
+
+describe('Edge Cases', () => {
+  it('validator handles unicode prompts', () => {
+    const v = new PromptValidator();
+    const r = v.validate('Buat fungsi untuk menghitung jumlah huruf dalam kalimat');
+    assert.ok(r.metrics.wordCount > 0);
+    assert.ok(r.score >= 0);
+  });
+
+  it('validator handles prompt with newlines', () => {
+    const v = new PromptValidator();
+    const r = v.validate('Task: Write a function\n\nContext: Node.js project\n\nRequirements:\n- Handle errors\n- Return JSON');
+    assert.ok(r.isValid);
+    assert.ok(r.metrics.wordCount > 5);
+  });
+
+  it('validator handles prompt with code blocks', () => {
+    const v = new PromptValidator();
+    const r = v.validate('Explain this code:\n```js\nconst x = 1;\n```');
+    assert.ok(r.metrics.length > 0);
+  });
+
+  it('score for excellent prompt is higher than for terrible one', () => {
+    const v = new PromptValidator();
+    const excellent = v.validate(
+      'Context: I am building a REST API with Node.js and Express\n\n' +
+      'Task: Implement a rate limiting middleware\n\n' +
+      'Requirements:\n- Limit requests to 100 per minute per IP\n' +
+      '- Return 429 status when limit exceeded\n' +
+      '- Use Redis for storing request counts\n\n' +
+      'Output format: TypeScript code with proper types'
+    );
+    const terrible = v.validate('do stuff');
+    assert.ok(excellent.score > terrible.score, `excellent=${excellent.score} terrible=${terrible.score}`);
+  });
+
+  it('custom rule with regex pattern', () => {
+    const v = new PromptValidator();
+    v.addCustomRule({
+      id: 'no-url',
+      name: 'No URLs',
+      description: 'Prompt should not contain URLs',
+      severity: 'warning',
+      validate: (p) => !/https?:\/\//.test(p),
+      message: 'Avoid including URLs in prompts',
+      suggestion: 'Describe the resource instead of linking'
+    });
+    const r = v.validate('Check out https://example.com for details');
+    assert.ok(r.issues.some(i => i.rule === 'no-url'));
+  });
+
+  it('enable/disable rule via enableRule/disableRule', () => {
+    const v = new PromptValidator();
+    // disableRule makes it always fail
+    v.disableRule('empty-prompt');
+    const r1 = v.validate('hello world');
+    assert.ok(r1.issues.some(i => i.rule === 'empty-prompt'));
+
+    // enableRule makes it always pass
+    v.enableRule('empty-prompt');
+    const r2 = v.validate('');
+    assert.ok(!r2.issues.some(i => i.rule === 'empty-prompt'));
+  });
+});
