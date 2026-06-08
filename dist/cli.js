@@ -114,7 +114,7 @@ program
                         }))
                     }
                 ]);
-                const selected = selectedOptimizations.map(i => optimizations[i]);
+                const selected = selectedOptimizations.map((i) => optimizations[i]);
                 optimizedPrompt = optimizer.applyMultipleOptimizations(prompt, selected);
                 console.log(chalk_1.default.green('\n🚀 Applied selected optimizations:'));
                 console.log(optimizedPrompt);
@@ -285,7 +285,7 @@ function displayValidationResult(result, verbose = false) {
     }
     if (result.suggestions.length > 0) {
         console.log('\n💡 General Suggestions:');
-        result.suggestions.slice(0, 3).forEach(suggestion => {
+        result.suggestions.slice(0, 3).forEach((suggestion) => {
             console.log(`  • ${suggestion}`);
         });
     }
