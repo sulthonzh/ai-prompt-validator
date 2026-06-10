@@ -68,14 +68,17 @@ aiv optimize "Write good code" --apply
 aiv optimize "Write good code" --interactive
 ```
 
-### Testing
+### Prompt Comparison
 
 ```bash
-# Test a batch of prompts
-aiv test --prompts prompts.txt
+# Compare two prompt versions
+aiv compare "Write a function" "Write a TypeScript function that handles edge cases"
 
-# Run a test suite
-aiv test --test-suite test-suite.json
+# Get comparison as JSON
+aiv compare "good code" "Write secure Node.js auth" --json
+
+# Markdown output for PRs
+aiv compare "v1 prompt" "v2 prompt" --markdown
 ```
 
 ## Usage Examples

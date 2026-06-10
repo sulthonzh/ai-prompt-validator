@@ -426,4 +426,27 @@ async function runBenchmark(prompts: string[], options: any): Promise<void> {
   }
 }
 
+
+// ── Compare Command ──
+program
+  .command('compare')
+  .description('Compare two prompts and show quality differences')
+  .argument('<promptA>', 'First prompt (baseline)')
+  .argument('<promptB>', 'Second prompt (revised)')
+  .option('--json', 'Output comparison as JSON')
+  .option('--markdown', 'Output comparison as markdown')
+  .action(async (promptA: string, promptB: string, options: { json?: boolean; markdown?: boolean }) => {
+    const { PromptComparator, formatCompareText, formatCompareJSON, formatCompareMarkdown } = await import('./comparator');
+    const comparator = new PromptComparator(validator);
+    const result = comparator.compare(promptA, promptB);
+
+    if (options.json) {
+      console.log(formatCompareJSON(result));
+    } else if (options.markdown) {
+      console.log(formatCompareMarkdown(result));
+    } else {
+      console.log(formatCompareText(result));
+    }
+  });
+
 program.parse();

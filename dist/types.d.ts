@@ -92,4 +92,27 @@ export interface BenchmarkResult {
     tokenCount: number;
     quality: 'excellent' | 'good' | 'fair' | 'poor';
 }
+export interface MetricDiff {
+    metric: string;
+    valueA: number;
+    valueB: number;
+    delta: number;
+}
+export interface CompareResult {
+    promptA: {
+        text: string;
+        result: ValidationResult;
+    };
+    promptB: {
+        text: string;
+        result: ValidationResult;
+    };
+    metricDiffs: MetricDiff[];
+    issueDiff: {
+        added: string[];
+        removed: string[];
+        kept: string[];
+    };
+    winner: 'A' | 'B' | 'tie';
+}
 //# sourceMappingURL=types.d.ts.map
