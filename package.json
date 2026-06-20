@@ -51,5 +51,18 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sulthonzh/ai-prompt-validator.git"
+  },
+  "homepage": "https://github.com/sulthonzh/ai-prompt-validator#readme",
+  "bugs": {
+    "url": "https://github.com/sulthonzh/ai-prompt-validator/issues"
   }
 }
