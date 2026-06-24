@@ -32,7 +32,7 @@
   "author": "Sulthonzh",
   "license": "MIT",
   "dependencies": {
-    "commander": "^11.0.0",
+    "commander": "^15.0.0",
     "chalk": "^4.1.2",
     "ora": "^5.4.1",
     "inquirer": "^8.2.6",
