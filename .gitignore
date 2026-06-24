@@ -70,3 +70,8 @@ Thumbs.db
 
 # custom config
 aiv-config.json
+build/
+__pycache__/
+.venv/
+*.egg-info/
+.mypy_cache/
