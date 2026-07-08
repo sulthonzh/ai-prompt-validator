@@ -32,22 +32,23 @@
   "author": "Sulthonzh",
   "license": "MIT",
   "dependencies": {
-    "commander": "^11.0.0",
-    "chalk": "^4.1.2",
-    "ora": "^5.4.1",
-    "inquirer": "^8.2.6",
     "axios": "^1.4.0",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
     "yaml": "^2.3.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@changesets/cli": "^2.31.0",
     "@types/inquirer": "^9.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^4.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "@vitest/coverage-v8": "^4.0.0",
     "eslint": "^10.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
