@@ -151,7 +151,7 @@ export class PromptValidator {
       isValid: issues.filter(issue => issue.severity === 'error').length === 0,
       score,
       issues,
-      suggestions: [...new Set(suggestions)], // Remove duplicates
+      suggestions: [...new Set(suggestions)],
       metrics
     };
   }
@@ -160,16 +160,9 @@ export class PromptValidator {
     const words = prompt.trim().split(/\s+/);
     const sentences = prompt.split(/[.!?]+/).filter(s => s.trim().length > 0);
 
-    // Clarity score based on word complexity and sentence structure
     const clarityScore = this.calculateClarityScore(prompt, sentences);
-    
-    // Specificity score based on specific terms
     const specificityScore = this.calculateSpecificityScore(prompt);
-    
-    // Structure score based on organization
     const structureScore = this.calculateStructureScore(sentences);
-    
-    // Creativity score based on vocabulary diversity
     const creativityScore = this.calculateCreativityScore(prompt, words);
 
     return {
@@ -184,17 +177,13 @@ export class PromptValidator {
   }
 
   private calculateClarityScore(prompt: string, sentences: string[]): number {
-    // Base score on sentence length variance and word complexity
     const avgSentenceLength = sentences.reduce((sum, s) => sum + s.trim().split(/\s+/).length, 0) / sentences.length;
     const lengthVariance = sentences.reduce((sum, s) => {
       const length = s.trim().split(/\s+/).length;
       return sum + Math.abs(length - avgSentenceLength);
     }, 0) / sentences.length;
 
-    // Prefer balanced sentence lengths
     let score = 100 - Math.min(lengthVariance * 5, 30);
-    
-    // Penalize extremely long sentences
     const longSentences = sentences.filter(s => s.trim().split(/\s+/).length > 25);
     score -= longSentences.length * 10;
     
@@ -202,7 +191,6 @@ export class PromptValidator {
   }
 
   private calculateSpecificityScore(prompt: string): number {
-    // Score based on specific terms vs generic ones
     const genericTerms = ['good', 'bad', 'nice', 'best', 'thing', 'stuff', 'thingy', 'whatchamacallit'];
     const specificTerms = ['implement', 'algorithm', 'function', 'class', 'component', 'api', 'database', 'server'];
     
@@ -212,7 +200,6 @@ export class PromptValidator {
     
     let score = 50 + (specificCount * 10) - (genericCount * 5);
     
-    // Bonus for technical terms
     const technicalTerms = ['javascript', 'python', 'typescript', 'react', 'node', 'express', 'mongodb', 'sql', 'api'];
     const technicalCount = words.filter(word => technicalTerms.includes(word)).length;
     score += technicalCount * 5;
@@ -221,20 +208,16 @@ export class PromptValidator {
   }
 
   private calculateStructureScore(sentences: string[]): number {
-    // Score based on sentence organization and structure
-    let score = 50; // Base score
+    let score = 50;
     
-    // Bonus for having multiple sentences (shows organization)
     if (sentences.length >= 3) score += 20;
     if (sentences.length >= 5) score += 10;
     
-    // Check for question structure
     const questions = sentences.filter(s => s.trim().endsWith('?'));
     if (questions.length > 0 && questions.length < sentences.length) {
-      score += 10; // Good mix of questions and statements
+      score += 10;
     }
     
-    // Check for imperative structure (starts with verbs)
     const verbs = ['create', 'build', 'implement', 'design', 'write', 'develop', 'add', 'fix', 'update'];
     const imperativeSentences = sentences.filter(s => {
       const firstWord = s.trim().split(/\s+/)[0].toLowerCase();
@@ -246,13 +229,11 @@ export class PromptValidator {
   }
 
   private calculateCreativityScore(prompt: string, words: string[]): number {
-    // Score based on vocabulary diversity
     const uniqueWords = new Set(words.map(word => word.toLowerCase()));
     const diversityRatio = uniqueWords.size / words.length;
     
     let score = diversityRatio * 100;
     
-    // Bonus for more unique words
     if (uniqueWords.size > 30) score += 20;
     if (uniqueWords.size > 50) score += 10;
     
@@ -260,10 +241,8 @@ export class PromptValidator {
   }
 
   private calculateScore(metrics: PromptMetrics, issues: PromptIssue[]): number {
-    // Start with metrics average
     let score = metrics.totalScore;
     
-    // Adjust based on issues
     const errorPenalty = issues.filter(issue => issue.severity === 'error').length * 20;
     const warningPenalty = issues.filter(issue => issue.severity === 'warning').length * 5;
     const infoPenalty = issues.filter(issue => issue.severity === 'info').length * 2;
@@ -284,14 +263,14 @@ export class PromptValidator {
   enableRule(id: string): void {
     const rule = this.getRule(id);
     if (rule) {
-      rule.validate = (prompt) => true; // Enable by always validating as true
+      rule.validate = () => true;
     }
   }
 
   disableRule(id: string): void {
     const rule = this.getRule(id);
     if (rule) {
-      rule.validate = (prompt) => false; // Disable by always failing
+      rule.validate = () => false;
     }
   }
 
