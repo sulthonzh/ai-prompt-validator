@@ -36,7 +36,7 @@
     "chalk": "^4.1.2",
     "commander": "^11.0.0",
     "inquirer": "^8.2.6",
-    "ora": "^5.4.1",
+    "ora": "^9.0.0",
     "yaml": "^2.3.0"
   },
   "devDependencies": {
