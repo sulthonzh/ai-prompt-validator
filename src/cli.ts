@@ -29,20 +29,16 @@ program
   .option('-v, --verbose', 'Show detailed analysis')
   .action(async (prompt, options) => {
     try {
-      // Load configuration if specified
       let config: Config = { rules: [] };
       if (options.config) {
         const configContent = await fs.readFile(options.config, 'utf-8');
         config = JSON.parse(configContent);
       }
 
-      // Parse rules if specified
       const enabledRules = options.rules ? options.rules.split(',') : undefined;
 
-      // Validate the prompt
       const result = validator.validate(prompt, enabledRules);
 
-      // Output based on format
       if (options.json) {
         console.log(JSON.stringify(result, null, 2));
         return;
@@ -54,10 +50,8 @@ program
         return;
       }
 
-      // Display human-readable output
       displayValidationResult(result, options.verbose || false);
 
-      // Exit with appropriate code
       if (!result.isValid) {
         process.exit(1);
       }
@@ -76,18 +70,15 @@ program
   .option('--interactive', 'Apply optimizations interactively')
   .action(async (prompt, options) => {
     try {
-      // Load configuration if specified
       let config: Config = { rules: [] };
       if (options.config) {
         const configContent = await fs.readFile(options.config, 'utf-8');
         config = JSON.parse(configContent);
       }
 
-      // Get metrics for optimization
       const issues = validator.validate(prompt).issues;
       const metrics = validator.validate(prompt).metrics;
 
-      // Generate optimizations
       const optimizations = optimizer.generateOptimizations(prompt, metrics);
 
       if (optimizations.length === 0) {
@@ -108,7 +99,6 @@ program
         console.log(`   ✨ After:\n   ${chalk.green(opt.after)}`);
       });
 
-      // Apply optimizations if requested
       let optimizedPrompt = prompt;
       if (options.apply) {
         optimizedPrompt = optimizer.applyMultipleOptimizations(prompt, optimizations);
@@ -142,7 +132,6 @@ program
           console.log(chalk.green('\n🚀 Applied selected optimizations:'));
           console.log(optimizedPrompt);
 
-          // Show validation of optimized prompt
           const optimizedResult = validator.validate(optimizedPrompt);
           console.log(chalk.blue('\n📊 Optimized Prompt Validation:'));
           displayValidationResult(optimizedResult, false);
@@ -268,7 +257,6 @@ program
           validator.addCustomRule({
             ...rule,
             validate: (prompt) => {
-              // Simple regex-based validation for custom rules
               return new RegExp(rule.pattern).test(prompt);
             }
           });
@@ -289,12 +277,10 @@ function displayValidationResult(result: any, verbose: boolean = false): void {
   console.log('\n' + chalk.bold('🎯 Prompt Validation Results'));
   console.log(''.padEnd(50, '-'));
 
-  // Overall status
   const status = result.isValid ? chalk.green('✅ VALID') : chalk.red('❌ INVALID');
   console.log(`Status: ${status}`);
   console.log(`Score: ${chalk.bold(result.score)}/100`);
 
-  // Metrics
   if (verbose) {
     console.log('\n📊 Detailed Metrics:');
     console.log(`  Length: ${result.metrics.length} characters`);
@@ -305,7 +291,6 @@ function displayValidationResult(result: any, verbose: boolean = false): void {
     console.log(`  Creativity: ${result.metrics.creativityScore}/100`);
   }
 
-  // Issues
   if (result.issues.length > 0) {
     console.log('\n🚨 Issues Found:');
     result.issues.forEach((issue: any) => {
@@ -320,7 +305,6 @@ function displayValidationResult(result: any, verbose: boolean = false): void {
     console.log('\n✅ No issues found!');
   }
 
-  // Suggestions
   if (result.suggestions.length > 0) {
     console.log('\n💡 General Suggestions:');
     result.suggestions.slice(0, 3).forEach((suggestion: string) => {

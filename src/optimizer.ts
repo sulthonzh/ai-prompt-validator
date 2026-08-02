@@ -63,32 +63,26 @@ export class PromptOptimizer {
   generateOptimizations(prompt: string, metrics: PromptMetrics): OptimizationSuggestion[] {
     const optimizations: OptimizationSuggestion[] = [];
 
-    // Structure optimizations
     if (metrics.structureScore < 70) {
       optimizations.push(...this.getStructureOptimizations(prompt));
     }
 
-    // Clarity optimizations
     if (metrics.clarityScore < 70) {
       optimizations.push(...this.getClarityOptimizations(prompt));
     }
 
-    // Specificity optimizations
     if (metrics.specificityScore < 70) {
       optimizations.push(...this.getSpecificityOptimizations(prompt));
     }
 
-    // Format optimizations
     if (!this.hasFormatSpecified(prompt)) {
       optimizations.push(this.suggestions.find(s => s.type === 'format')!);
     }
 
-    // Length optimizations
     if (metrics.length > 1500) {
       optimizations.push(...this.getLengthOptimizations(prompt));
     }
 
-    // Add generic suggestions based on metrics
     if (metrics.totalScore < 70) {
       optimizations.push({
         type: 'clarity',
@@ -100,7 +94,6 @@ export class PromptOptimizer {
       });
     }
 
-    // Sort by priority and return unique suggestions
     return optimizations
       .sort((a, b) => {
         const priorityOrder = { high: 3, medium: 2, low: 1 };
@@ -109,7 +102,7 @@ export class PromptOptimizer {
       .filter((suggestion, index, self) => 
         index === self.findIndex(s => s.type === suggestion.type && s.description === suggestion.description)
       )
-      .slice(0, 5); // Return top 5 suggestions
+      .slice(0, 5);
   }
 
   private getStructureOptimizations(prompt: string): OptimizationSuggestion[] {
@@ -165,7 +158,6 @@ export class PromptOptimizer {
   private getSpecificityOptimizations(prompt: string): OptimizationSuggestion[] {
     const optimizations: OptimizationSuggestion[] = [];
     
-    // Check for generic requirements
     if (prompt.toLowerCase().includes('create') && !prompt.toLowerCase().includes('function') && !prompt.toLowerCase().includes('component')) {
       optimizations.push({
         type: 'specificity',
@@ -205,7 +197,6 @@ export class PromptOptimizer {
   }
 
   applyOptimization(prompt: string, optimization: OptimizationSuggestion): string {
-    // Apply the optimization by replacing the 'before' with 'after'
     return optimization.before === prompt ? optimization.after : prompt;
   }
 
