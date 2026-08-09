@@ -65,5 +65,8 @@
   "homepage": "https://github.com/sulthonzh/ai-prompt-validator#readme",
   "bugs": {
     "url": "https://github.com/sulthonzh/ai-prompt-validator/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
