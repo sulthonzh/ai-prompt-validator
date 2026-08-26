@@ -2,5 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Cap typescript at ^6: @typescript-eslint v8 peer-requires TS <6.1.0; TS7 causes ERESOLVE (flag #20 fleet pattern)",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "^6"
+    }
   ]
 }
